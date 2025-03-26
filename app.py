@@ -12,7 +12,7 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
 # Path to the credentials file you downloaded from Google Cloud Console
-CLIENT_SECRET_FILE = 'https://github.com/sanket101-git/Qr-scanner2/blob/7d8357d27f44b94c3ee12ef1f4627bfed4ee2195/client_secret_1068304963084-vdm3qlbm4b76k4skdop44gfvan7rghf3.apps.googleusercontent.com.json'
+CLIENT_SECRET_FILE = 'credentials.json'
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive.file']
 
 # The ID of your Google Sheets document

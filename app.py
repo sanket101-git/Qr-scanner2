@@ -12,9 +12,9 @@ app = Flask(__name__, template_folder="templates")  # Ensure the templates folde
 app.secret_key = os.urandom(24)
 
 # Google API Credentials & Sheets Configuration
-CLIENT_SECRET_FILE = 'credentials.json'
+CLIENT_SECRET_FILE = '/etc/secrets/credentials.json'
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive.file']
-SPREADSHEET_ID = 'your-spreadsheet-id'  # Replace with your actual Google Sheets ID
+SPREADSHEET_ID = '1GTXyh9LW-DTVDkcFhumMwWDn9I8jZWTV1fLDqncoGl4'  # Replace with your actual Google Sheets ID
 
 # Function to get Google API credentials
 def get_credentials():

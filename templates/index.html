@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Scanner</title>
+    <script src="https://unpkg.com/jsqr/dist/jsQR.js"></script>
+</head>
+<body>
+    <h1>QR Code Scanner</h1>
+    <video id="video" width="300" height="200"></video>
+    <script>
+        async function startScanner() {
+            const video = document.getElementById('video');
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+            video.srcObject = stream;
+            video.play();
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            function scan() {
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const code = jsQR(imageData.data, imageData.width, imageData.height);
+                if (code) {
+                    alert("QR Code Scanned: " + code.data);
+
+                    // Send QR Code data to the server to save in Google Sheets
+                    fetch('/save_qr_data', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ qr_data: code.data }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);  // Display confirmation message from the server
+                        video.srcObject.getTracks().forEach(track => track.stop());  // Stop the camera after scanning
+                        startScanner();  // Restart the scanner to be ready for the next scan
+                    })
+                    .catch(error => {
+                        console.error("Error saving QR data:", error);
+                        alert("Error saving QR data.");
+                    });
+                } else {
+                    requestAnimationFrame(scan);
+                }
+            }
+
+            scan();
+        }
+
+        startScanner();
+    </script>
+</body>
+</html>
